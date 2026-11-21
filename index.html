@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>API Dólar AR</title>
+  <style>
+    :root { --fondo:#f6f7f9; --tarjeta:#fff; --texto:#1d2330; --suave:#5d6677; --borde:#dde1e8; --acento:#2563eb; }
+    @media (prefers-color-scheme: dark) { :root { --fondo:#0f1115; --tarjeta:#181b21; --texto:#e7e9ee; --suave:#9aa3b2; --borde:#2a2f38; --acento:#60a5fa; } }
+    body { margin:0; font-family:system-ui,sans-serif; background:var(--fondo); color:var(--texto); }
+    main { max-width:760px; margin:0 auto; padding:24px 16px 48px; }
+    p { color:var(--suave); } a { color:var(--acento); }
+    table { width:100%; border-collapse:collapse; background:var(--tarjeta); border:1px solid var(--borde); border-radius:12px; overflow:hidden; }
+    th, td { padding:10px; text-align:right; border-bottom:1px solid var(--borde); } th:first-child, td:first-child { text-align:left; }
+    code, pre { background:var(--tarjeta); border:1px solid var(--borde); border-radius:6px; padding:2px 6px; }
+    pre { padding:12px; overflow-x:auto; }
+    .tabla { overflow-x:auto; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>API Dólar AR</h1>
+  <p>API pública, gratuita y sin servidor con las cotizaciones del dólar en Argentina. Se regenera todos los días con GitHub Actions y se sirve como JSON estático desde GitHub Pages.</p>
+  <div class="tabla">
+    <table>
+      <thead><tr><th>Casa</th><th>Compra</th><th>Venta</th><th>Brecha vs oficial</th><th>Var. 30 días</th></tr></thead>
+      <tbody id="filas"><tr><td colspan="5">Cargando…</td></tr></tbody>
+    </table>
+  </div>
+  <p id="generado"></p>
+  <h2>Endpoints</h2>
+  <ul>
+    <li><a href="v1/dolares.json"><code>GET /v1/dolares.json</code></a>: cotización actual de cada casa.</li>
+    <li><a href="v1/brecha.json"><code>GET /v1/brecha.json</code></a>: brecha porcentual contra el oficial.</li>
+    <li><a href="v1/historico/blue.json"><code>GET /v1/historico/{casa}.json</code></a>: serie diaria completa.</li>
+    <li><a href="v1/resumen/blue.json"><code>GET /v1/resumen/{casa}.json</code></a>: último valor y variación a 7, 30 y 365 días.</li>
+    <li><a href="v1/index.json"><code>GET /v1/index.json</code></a>: casas disponibles y fecha de generación.</li>
+  </ul>
+  <h2>Ejemplo</h2>
+  <pre>fetch('https://nbbz95.github.io/api-dolar-ar/v1/dolares.json')
+  .then(r => r.json())
+  .then(console.log)</pre>
+  <p>Fuentes: <a href="https://dolarapi.com">DolarApi</a> y <a href="https://argentinadatos.com">ArgentinaDatos</a>. Código en <a href="https://github.com/nbbz95/api-dolar-ar">GitHub</a>.</p>
+</main>
+<script>
+  const pesos = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
+  const pct = (v) => v == null ? '—' : `${v > 0 ? '+' : ''}${v.toLocaleString('es-AR')}%`;
+  Promise.all([
+    fetch('v1/dolares.json').then(r => r.json()),
+    fetch('v1/brecha.json').then(r => r.json()),
+    fetch('v1/index.json').then(r => r.json()),
+  ]).then(async ([dolares, brecha, indice]) => {
+    const b = Object.fromEntries(brecha.map(x => [x.casa, x.brecha_pct]));
+    const resumenes = await Promise.all(indice.casas.map(c => fetch(`v1/resumen/${c}.json`).then(r => r.json()).then(r => [c, r])));
+    const r = Object.fromEntries(resumenes);
+    document.getElementById('filas').innerHTML = dolares.map(d => `
+      <tr><td>${d.nombre}</td><td>${d.compra == null ? '—' : pesos.format(d.compra)}</td><td>${pesos.format(d.venta)}</td>
+      <td>${d.casa === 'oficial' ? '—' : pct(b[d.casa])}</td><td>${pct(r[d.casa]?.variacion_pct['30d'])}</td></tr>`).join('');
+    document.getElementById('generado').textContent = `Actualizado: ${new Date(indice.generado).toLocaleString('es-AR')}`;
+  }).catch(() => { document.getElementById('filas').innerHTML = '<tr><td colspan="5">No se pudieron cargar los datos.</td></tr>'; });
+</script>
+</body>
+</html>
