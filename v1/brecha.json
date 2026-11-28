@@ -1,0 +1,32 @@
+[
+ {
+  "casa": "blue",
+  "venta": 1695,
+  "brecha_pct": 4.31
+ },
+ {
+  "casa": "bolsa",
+  "venta": 1661.9,
+  "brecha_pct": 2.27
+ },
+ {
+  "casa": "contadoconliqui",
+  "venta": 1751.3,
+  "brecha_pct": 7.77
+ },
+ {
+  "casa": "cripto",
+  "venta": 1742.22,
+  "brecha_pct": 7.21
+ },
+ {
+  "casa": "mayorista",
+  "venta": 1605,
+  "brecha_pct": -1.23
+ },
+ {
+  "casa": "tarjeta",
+  "venta": 2112.5,
+  "brecha_pct": 30.0
+ }
+]

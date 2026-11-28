@@ -1,0 +1,51 @@
+[
+ {
+  "casa": "blue",
+  "nombre": "Blue",
+  "compra": 1675,
+  "venta": 1695,
+  "actualizado": "2026-11-27T20:59:00.000Z"
+ },
+ {
+  "casa": "bolsa",
+  "nombre": "Bolsa",
+  "compra": 1647.9,
+  "venta": 1661.9,
+  "actualizado": "2026-11-27T20:59:00.000Z"
+ },
+ {
+  "casa": "contadoconliqui",
+  "nombre": "Contado con liquidación",
+  "compra": 1748.3,
+  "venta": 1751.3,
+  "actualizado": "2026-11-27T20:59:00.000Z"
+ },
+ {
+  "casa": "cripto",
+  "nombre": "Cripto",
+  "compra": 1734.29,
+  "venta": 1742.22,
+  "actualizado": "2026-11-27T20:59:00.000Z"
+ },
+ {
+  "casa": "mayorista",
+  "nombre": "Mayorista",
+  "compra": 1596,
+  "venta": 1605,
+  "actualizado": "2026-11-26T15:10:00.000Z"
+ },
+ {
+  "casa": "oficial",
+  "nombre": "Oficial",
+  "compra": 1575,
+  "venta": 1625,
+  "actualizado": "2026-11-27T18:00:00.000Z"
+ },
+ {
+  "casa": "tarjeta",
+  "nombre": "Tarjeta",
+  "compra": 2047.5,
+  "venta": 2112.5,
+  "actualizado": "2026-11-27T18:00:00.000Z"
+ }
+]
